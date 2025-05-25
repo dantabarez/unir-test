@@ -1,0 +1,18 @@
+docker run --rm --volume `pwd`:/opt/calc --env PYTHONPATH=/opt/calc -w /opt/calc calculator-app:latest pytest --cov --cov-report=xml:results/coverage.xml --cov-report=html:results/coverage --junit-xml=results/unit_result.xml -m unit || true
+============================= test session starts ==============================
+platform linux -- Python 3.6.15, pytest-5.4.3, py-1.11.0, pluggy-0.13.1
+rootdir: /opt/calc, inifile: pytest.ini
+plugins: cov-2.10.0
+collected 32 items / 8 deselected / 24 selected
+
+test/unit/calc_test.py ......................                            [ 91%]
+test/unit/util_test.py ..                                                [100%]
+
+------------ generated xml file: /opt/calc/results/unit_result.xml -------------
+
+---------- coverage: platform linux, python 3.6.15-final-0 -----------
+Coverage HTML written to dir results/coverage
+Coverage XML written to file results/coverage.xml
+
+======================= 24 passed, 8 deselected in 0.22s =======================
+docker run --rm --volume `pwd`:/opt/calc --env PYTHONPATH=/opt/calc -w /opt/calc calculator-app:latest junit2html results/unit_result.xml results/unit_result.html

@@ -1,0 +1,21 @@
+docker network create calc-test-api || true
+e3c5e3afa3575b8affac20500d7b0ae18075d3a72d6a7af6984d40695821cb2e
+docker run -d --rm --volume `pwd`:/opt/calc --network calc-test-api --env PYTHONPATH=/opt/calc --name apiserver --env FLASK_APP=app/api.py -p 5000:5000 -w /opt/calc calculator-app:latest flask run --host=0.0.0.0
+e9a260c64dbfdaf83d221f650411b78ccdb03de3465221153bcae72412c2e31d
+docker run --rm --volume `pwd`:/opt/calc --network calc-test-api --env PYTHONPATH=/opt/calc --env BASE_URL=http://apiserver:5000/ -w /opt/calc calculator-app:latest pytest --junit-xml=results/api_result.xml -m api  || true
+============================= test session starts ==============================
+platform linux -- Python 3.6.15, pytest-5.4.3, py-1.11.0, pluggy-0.13.1
+rootdir: /opt/calc, inifile: pytest.ini
+plugins: cov-2.10.0
+collected 32 items / 25 deselected / 7 selected
+
+test/rest/api_test.py .......                                            [100%]
+
+------------- generated xml file: /opt/calc/results/api_result.xml -------------
+======================= 7 passed, 25 deselected in 0.13s =======================
+docker run --rm --volume `pwd`:/opt/calc --env PYTHONPATH=/opt/calc -w /opt/calc calculator-app:latest junit2html results/api_result.xml results/api_result.html
+docker stop apiserver || true
+apiserver
+docker rm --force apiserver || true
+docker network rm calc-test-api
+calc-test-api

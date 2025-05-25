@@ -51,6 +51,72 @@ class TestCalculate(unittest.TestCase):
         self.assertEqual(0, self.calc.multiply(-1, 0))
         self.assertEqual(-2, self.calc.multiply(-1, 2))
 
+    def test_substract_method_returns_correct_result(self):
+        self.assertEqual(0, self.calc.substract(2, 2))
+        self.assertEqual(4, self.calc.substract(2, -2))
+        self.assertEqual(-4, self.calc.substract(-2, 2))
+        self.assertEqual(1, self.calc.substract(1, 0))
+
+    def test_power_method_returns_correct_result(self):
+        self.assertEqual(4, self.calc.power(2, 2))
+        self.assertEqual(1, self.calc.power(2, 0))
+        self.assertEqual(0.25, self.calc.power(2, -2))
+
+    def test_sqrt_method_returns_correct_result(self):
+        self.assertEqual(3, self.calc.sqrt(9))
+        self.assertEqual(0, self.calc.sqrt(0))
+        self.assertAlmostEqual(1.414213562, self.calc.sqrt(2), places=6)
+
+    def test_log10_method_returns_correct_result(self):
+        self.assertEqual(2, self.calc.log10(100))
+        self.assertEqual(0, self.calc.log10(1))
+        self.assertAlmostEqual(0.30103, self.calc.log10(2), places=5)
+
+    # --- PRUEBAS EXITOSAS ADICIONALES ---
+    def test_add_method_with_floats(self):
+        self.assertAlmostEqual(5.7, self.calc.add(2.5, 3.2), places=6)
+
+    def test_substract_method_with_floats(self):
+        self.assertAlmostEqual(-0.7, self.calc.substract(2.5, 3.2), places=6)
+
+    @patch('app.util.validate_permissions', side_effect=mocked_validation, create=True)
+    def test_multiply_method_with_floats(self, _validate_permissions):
+        self.assertAlmostEqual(8.0, self.calc.multiply(2.5, 3.2), places=6)
+
+    def test_divide_method_with_floats(self):
+        self.assertAlmostEqual(2.5, self.calc.divide(5.0, 2.0), places=6)
+
+    def test_power_method_with_floats(self):
+        self.assertAlmostEqual(9.261, self.calc.power(2.1, 3), places=3)
+
+    def test_sqrt_method_with_float(self):
+        self.assertAlmostEqual(1.73205, self.calc.sqrt(3), places=5)
+
+    def test_log10_method_with_float(self):
+        self.assertAlmostEqual(1.4771, self.calc.log10(30), places=4)
+
+    # --- PRUEBAS DE ERROR ADICIONALES ---
+    def test_power_method_fails_with_nan_parameter(self):
+        self.assertRaises(TypeError, self.calc.power, "2", 2)
+        self.assertRaises(TypeError, self.calc.power, 2, "2")
+        self.assertRaises(TypeError, self.calc.power, None, 2)
+
+    def test_sqrt_method_fails_with_negative(self):
+        self.assertRaises(ValueError, self.calc.sqrt, -1)
+        self.assertRaises(ValueError, self.calc.sqrt, -100)
+
+    def test_sqrt_method_fails_with_nan_parameter(self):
+        self.assertRaises(TypeError, self.calc.sqrt, "9")
+        self.assertRaises(TypeError, self.calc.sqrt, None)
+
+    def test_log10_method_fails_with_zero_or_negative(self):
+        self.assertRaises(ValueError, self.calc.log10, 0)
+        self.assertRaises(ValueError, self.calc.log10, -10)
+
+    def test_log10_method_fails_with_nan_parameter(self):
+        self.assertRaises(TypeError, self.calc.log10, "100")
+        self.assertRaises(TypeError, self.calc.log10, None)
+
 
 if __name__ == "__main__":  # pragma: no cover
     unittest.main()
